@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- ================================================================
+         IDENTITÉ DU PROJET
+         groupId    : domaine inversé (fr.stimoi = stimoi.fr)
+         artifactId : nom du plugin (en minuscules, sans espaces)
+         version    : X.Y.Z — incrémente à chaque release
+         ================================================================ -->
+    <groupId>fr.stimoi</groupId>
+    <artifactId>valocraft</artifactId>
+    <version>1.0.1</version>
+    <packaging>jar</packaging>
+
+    <name>ValoCraft</name>
+    <description>Transforme Minecraft en Valorant — par sti_moi</description>
+
+    <!-- ================================================================
+         PROPRIÉTÉS GLOBALES
+         java.version : doit correspondre à ton JDK installé (17+)
+         ================================================================ -->
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Version de Paper API — mets à jour selon ton serveur -->
+        <paper.version>1.21.1-R0.1-SNAPSHOT</paper.version>
+    </properties>
+
+    <!-- ================================================================
+         DÉPÔTS (repositories)
+         Maven cherche les dépendances dans ces URLs dans l'ordre.
+         PaperMC n'est pas sur le dépôt central Maven, on doit l'ajouter.
+         ================================================================ -->
+    <repositories>
+        <!-- Dépôt officiel PaperMC -->
+        <repository>
+            <id>papermc-repo</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
+        </repository>
+        <!-- Dépôt SpigotMC (fallback) -->
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
+
+    <!-- ================================================================
+         DÉPENDANCES
+         scope "provided" = fourni par le serveur au runtime,
+         ne pas inclure dans le JAR final (évite les conflits).
+         ================================================================ -->
+    <dependencies>
+        <!-- API Paper — inclut toute l'API Spigot/Bukkit -->
+        <dependency>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>${paper.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <!-- ================================================================
+         BUILD
+         Le plugin Maven Shade repackage le JAR en incluant
+         les dépendances NON "provided" dans un seul fichier.
+         maven-compiler-plugin active les records/sealed classes Java 17.
+         ================================================================ -->
+    <build>
+        <!-- Nom du fichier JAR généré dans /target -->
+        <finalName>${project.name}-${project.version}</finalName>
+
+        <plugins>
+            <!-- Compilateur Java 17 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <release>17</release>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+
+            <!-- Shade Plugin : crée le "fat jar" déployable -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Exclure les signatures pour éviter SecurityException -->
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <!-- Minimise le JAR en supprimant les classes inutilisées -->
+                            <minimizeJar>false</minimizeJar>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+        <!-- Inclut les fichiers resources (plugin.yml, config.yml...) dans le JAR -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
+
+</project>

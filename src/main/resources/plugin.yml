@@ -1,0 +1,85 @@
+# ============================================================
+# plugin.yml — Fichier de configuration principal du plugin
+# Bukkit/Paper lit ce fichier AU DÉMARRAGE pour enregistrer
+# le plugin, ses commandes et ses permissions.
+# ============================================================
+
+# Nom affiché dans /plugins et les logs
+name: ValoCraft
+
+# Doit correspondre EXACTEMENT au nom de ta classe Main (avec package complet)
+main: fr.stimoi.valocraft.ValoCraft
+
+# Version récupérée depuis pom.xml grâce au filtering Maven
+version: ${project.version}
+
+# Description courte (optionnelle mais recommandée)
+description: "Transforme Minecraft en Valorant — agents, capacités et round system."
+
+# Auteur du plugin
+author: sti_moi
+
+# Version minimale de l'API Bukkit requise (Paper 1.21)
+api-version: "1.21"
+
+# ============================================================
+# COMMANDES
+# Chaque entrée est une commande disponible en jeu (/valocraft)
+# ============================================================
+commands:
+  valocraft:
+    description: "Commande principale de ValoCraft"
+    usage: "/<command> <agent|help|info>"
+    aliases: [vc, valo]
+    permission: valocraft.use
+    permission-message: "§cTu n'as pas la permission d'utiliser ValoCraft !"
+
+# ============================================================
+# PERMISSIONS
+# default: true  → tout le monde a cette permission
+# default: op    → seulement les OP
+# default: false → personne par défaut (attribution manuelle)
+# children: liste les sous-permissions héritées
+# ============================================================
+permissions:
+
+  # --- Permission globale d'utilisation ---
+  valocraft.use:
+    description: "Permet d'utiliser les commandes de base de ValoCraft"
+    default: true
+
+  # --- Choisir un agent ---
+  valocraft.agent.select:
+    description: "Permet de sélectionner un agent Valorant"
+    default: true
+
+  # --- Agents individuels ---
+  valocraft.agent.jett:
+    description: "Permet de jouer l'agent Jett"
+    default: true
+
+  valocraft.agent.phoenix:
+    description: "Permet de jouer l'agent Phoenix"
+    default: true
+
+  valocraft.agent.sage:
+    description: "Permet de jouer l'agent Sage"
+    default: true
+
+  # --- Administration ---
+  valocraft.admin:
+    description: "Accès aux commandes d'administration ValoCraft"
+    default: op
+    # Un admin hérite automatiquement de toutes les permissions ci-dessous
+    children:
+      valocraft.use: true
+      valocraft.agent.select: true
+      valocraft.agent.jett: true
+      valocraft.agent.phoenix: true
+      valocraft.agent.sage: true
+      valocraft.bypass.blockbreak: true
+
+  # --- Bypass (pour les admins / arènes) ---
+  valocraft.bypass.blockbreak:
+    description: "Permet de casser des blocs même hors capacité"
+    default: op

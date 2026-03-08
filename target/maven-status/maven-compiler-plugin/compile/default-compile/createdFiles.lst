@@ -1,0 +1,11 @@
+fr\stimoi\valocraft\commands\ValoCraftCommand.class
+fr\stimoi\valocraft\agents\phoenix\PhoenixAgent$1.class
+fr\stimoi\valocraft\agents\Agent.class
+fr\stimoi\valocraft\agents\sage\SageAgent.class
+fr\stimoi\valocraft\agents\jett\JettAgent.class
+fr\stimoi\valocraft\agents\phoenix\PhoenixAgent$2.class
+fr\stimoi\valocraft\agents\AgentManager.class
+fr\stimoi\valocraft\agents\phoenix\PhoenixAgent.class
+fr\stimoi\valocraft\listeners\BlockBreakListener.class
+fr\stimoi\valocraft\listeners\InventoryListener.class
+fr\stimoi\valocraft\ValoCraft.class
